@@ -9,42 +9,50 @@ function App() {
 
   const themes = [
     {
-      "color1": "red",
-      "color2": "blue"
+      "color1": "#d81e5b",
+      "color2": "#131a26",
+      "color3": "#888"
     },
     {
-      "color1": "red",
-      "color2": "white"
+      "color1": "#262834",
+      "color2": "#56cbdb",
+      "color3": "#888"
     },
     {
-      "color1": "red",
-      "color2": "black"
+      "color1": "#c83349",
+      "color2": "#e06377",
+      "color3": "#fff"
     },
     {
-      "color1": "red",
-      "color2": "green"
+      "color1": "#622569",
+      "color2": "#b8a9c9",
+      "color3": "#888"
+    },
+    {
+      "color1": "#96ceb4",
+      "color2": "#5b9aa0",
+      "color3": "#fff"
     },
   ]
-  console.log(themes);
 
   const createThemes = () => {
-    console.log("fradi");
     const newthemes = [];
     for (let elem of themes) {
       let string = "linear-gradient(135deg, "+elem.color1+" 20%,"+elem.color2+ " 80%)";
       newthemes.push(
         <button 
           onClick={() => changeTheme(themes.indexOf(elem))}
-          style={{background: string}}>{themes.indexOf(elem)}
+          style={{background: string}}
+          key={themes.indexOf(elem)}
+        >
+          {themes.indexOf(elem)+1}
         </button>
       );
     }
-    console.log(newthemes);
     return newthemes;
   };
 
   const changeTheme = (index) => {
-    console.log(`Index: ${index}`)
     setTheme(themes[index]);
   }
 
@@ -60,8 +68,6 @@ function App() {
 
     if(!ops.includes(value)){
       setResult(eval(calc+value).toString());
-      console.log(1);
-      console.log(eval(calc+value));
     }
   };
 
@@ -80,8 +86,6 @@ function App() {
   };
 
   const calculate = () => {
-    console.log(2);
-    console.log(eval(calc));
     setCalc(eval(calc).toString())
   }
 
@@ -92,17 +96,29 @@ function App() {
 
     const value = calc.slice(0, -1);
     setCalc(value);
+    if(ops.includes(value[value.length-1])){
+      setResult(value.slice(0, -1));
+    } else{
+      setResult(value);
+    }
+  }
+
+  const deleteAll = () => {
+    if(calc === ''){
+      return;
+    }
+
+    const value = "";
+    setCalc(value);
   }
 
   const setTheme = (theme) => {
-    console.log("Error")
-    console.log(theme)
     const first = theme.color1;
     const second = theme.color2;
-    console.log(first)
-    console.log(second)
+    const third = theme.color3;
     document.documentElement.style.setProperty('--primary', first);
     document.documentElement.style.setProperty('--dark', second);
+    document.documentElement.style.setProperty('--result', third);
   }
 
   return (
@@ -119,12 +135,13 @@ function App() {
           {result ? <span>({result})</span> : ""}&nbsp;
           {calc || "0"}
         </div>
+        <div className="keypad">
         <div className="operators">
           <button onClick={() => updateCalc("/")}>/</button>
           <button onClick={() => updateCalc("*")}>*</button>
           <button onClick={() => updateCalc("+")}>+</button>
           <button onClick={() => updateCalc("-")}>-</button>
-
+          <button onClick={deleteAll}>AC</button>
           <button onClick={deleteLast}>DEL</button>
         </div>
         <div className="digits">
@@ -132,6 +149,7 @@ function App() {
           <button onClick={() => updateCalc("0")}>0</button>
           <button onClick={() => updateCalc(".")}>.</button>
           <button onClick={calculate}>=</button>
+        </div>
         </div>
       </div>
     </div>
